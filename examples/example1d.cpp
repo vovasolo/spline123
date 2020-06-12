@@ -85,13 +85,13 @@ int main(int argc, char* argv[])
 // part 2
     c1.cd(2);
     TF1 *fb2 = new TF1("fb2","gaus(0)+expo(3)",0,100);
-    fb2->SetParameters(0, 47, 7, 1, -0.025);
+    fb2->SetParameters(1, 47, 7, 1, -0.025);
 
     MyGraph graph2(0, 100);
     graph2.SetTitle("Simple fit with noise");
     graph2.SetFunc(fb2);
     graph2.SetNoise(0.2);
-    graph2.MkData(100);
+    graph2.MkData(40);
 
     BSfit1D F2(0, 100, 15);
     Bspline1d *bs2 = F2.FitAndMakeSpline(graph2.GetX(), graph2.GetY());
