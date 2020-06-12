@@ -141,7 +141,7 @@ public:
 
 // 1D constraints
     void SetMinimum(double min) {cstr->SetMinimum(min);}
-    void SetMaximum(double min) {cstr->SetMaximum(min);}
+    void SetMaximum(double max) {cstr->SetMaximum(max);}
     void ForceNonNegative() {cstr->ForceNonNegative();}
     void ForceNonIncreasing();
     void ForceNonDecreasing();
@@ -202,7 +202,7 @@ public:
     bool SolveLinSystem();
 // 2D constraints
     void SetMinimum(double min) {cstr->SetMinimum(min);}
-    void SetMaximum(double min) {cstr->SetMaximum(min);}
+    void SetMaximum(double max) {cstr->SetMaximum(max);}
     void ForceNonNegative() {cstr->ForceNonNegative();}
     void ForceNonIncreasingX();
     void SetSlopeY(int slope_y);
@@ -262,7 +262,7 @@ public:
 
 // 3D constraints
     void SetMinimum(double min) {cstr->SetMinimum(min);}
-    void SetMaximum(double min) {cstr->SetMaximum(min);}
+    void SetMaximum(double max) {cstr->SetMaximum(max);}
     void ForceNonNegative() {cstr->ForceNonNegative();}
 
 private:
