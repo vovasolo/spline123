@@ -7,7 +7,10 @@ ROOTFLAGS = $(shell root-config --cflags)
 ROOTLIBS = $(shell root-config --libs)
 OBJS = bsfit123.o bspline123d.o json11.o profileHist.o
 
-spline: $(OBJS) wrap.o
+spline: $(OBJS)
+	$(CXX) -shared -o spline.so $(OBJS)
+
+python: $(OBJS) wrap.o
 	$(CXX) -shared -o spline.so $(OBJS) wrap.o
 
 example: $(OBJS) example1d.o
