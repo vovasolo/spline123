@@ -9,7 +9,7 @@ The provided data are fit with piecewise cubic (bi-cubic or tri-cubic for higher
 * Unconstrained fit by linear least squares
 * Constrained fit by quadratic programming:
   * Minimum and/or maximum limits, including non-negative option
-  * Monotonically rising of falling
+  * Monotonically rising or falling
   * Fixed value and/or derivative at the endpoints
 * Direct and binned fitting options
 * Smart treatment of missing data
@@ -39,8 +39,47 @@ import spline
 ```
 
 ## Example
-If CERN ROOT is installed, you can build a simple example with 
+If ROOT is installed, you can build a simple example with 
 ```
 make example
 ```
 
+## Usage: C++
+The basic usage requires only two classes: ```BSfit1D``` for fitting and ```Bspline1d``` for spline evaluation. While internally the library works with arrays of doubles, the preferred way to supply data is in the form of ```std::vector```. Let's start by preparing some data to fit.
+```c++
+std::vector<double> x, f;
+// fill vectors x and f with data
+for (double xx = 0.; xx <= 10.; xx+=0.2) {
+    x.push_back(xx); 
+    f.push_pack(exp(-xx*xx/100.));
+}
+```
+Now create unconstrained fitting object, perform the fit and retrieve resulting spline object in one go, and evaluate the spline first at one point and then for all points in a vector:
+```c++
+// prepare fit on the segment [0,10] with a 15-interval spline
+BSfit1D F1(0, 10, 15);
+// do fit, create and store spline
+Bspline1d *bs1 = F1.FitAndMakeSpline(x, f);
+// calculate spline at position 4
+double spl_4 = bs1->Eval(4);
+// calculate spline at all positions from vector x
+std::vector<double> spl_x = bs1->Eval(x);
+```
+### Constrained fit
+```c++
+Constrainedfit1D F1(0, 10, 15);
+CF1.ForceNonNegative();
+CF1.ForceNonIncreasing();
+CF1.FixDrvLeft(0);
+Bspline1d *bs1 = CF1.FitAndMakeSpline(x, f);
+```
+### Binned fit
+When there is a lot of data points, the time requred for fitting can become unconveniently long. The solution is to collect the data points into bins along x (y,z), then take average for each bin and fit this average.
+```c++
+BSfit1D BF1(0, 10, 15);
+BF1.AddData(x,f);
+BF1.AddData(x2,f2); // optional
+BF1.BinnedFit();
+Bspline1d *bs1 = BF1.MakeSpline();
+```
+AddData can be repeated several times with new data: the results will be accumulating in the internal storage
