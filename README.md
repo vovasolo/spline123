@@ -54,7 +54,7 @@ for (double xx = 0.; xx <= 10.; xx+=0.2) {
     f.push_pack(exp(-xx*xx/100.));
 }
 ```
-Now create unconstrained fitting object, perform the fit and retrieve resulting spline object in one go, and evaluate the spline first at one point and then for all points in a vector:
+Now create an unconstrained fitting object, perform the fit and retrieve the resulting spline object in one go, and then evaluate the spline, first at one point and then for all points in a vector:
 ```c++
 // prepare fit on the segment [0,10] with a 15-interval spline
 BSfit1D F1(0, 10, 15);
@@ -66,6 +66,7 @@ double spl_4 = bs1->Eval(4);
 std::vector<double> spl_x = bs1->Eval(x);
 ```
 ### Constrained fit
+Introducing one more class: ```ConstrainedFit1D```. As a descendant of ```BSfit1D```, it provides the same fitting and data handling functionality, adding the methods necessary to define the constraints.
 ```c++
 Constrainedfit1D F1(0, 10, 15);
 CF1.ForceNonNegative();
@@ -74,7 +75,7 @@ CF1.FixDrvLeft(0);
 Bspline1d *bs1 = CF1.FitAndMakeSpline(x, f);
 ```
 ### Binned fit
-When there is a lot of data points, the time requred for fitting can become unconveniently long. The solution is to collect the data points into bins along x (y,z), then take average for each bin and fit this average.
+When there is a lot of data points, the time required for fitting can become inconveniently long. The solution is to collect the data points into bins along x (y,z), then take average for each bin and fit this average.
 ```c++
 BSfit1D BF1(0, 10, 15);
 BF1.AddData(x,f);
@@ -83,3 +84,11 @@ BF1.BinnedFit();
 Bspline1d *bs1 = BF1.MakeSpline();
 ```
 AddData can be repeated several times with new data: the results will be accumulating in the internal storage
+### Input/output
+The spline parameters and coefficients can be exported (as JSON) into ```std::string```. The exact copy of the original spline object can be recreated by suppluing the exported string to ```Bspline1d``` constructor:
+```c++
+std::string jsontext = bs1->GetJsonString();
+Bspline1d *bs2 = new Bspline1d(jsontext);
+std::cout << bs1->Eval(4) << "==" << bs2->Eval(4) << std::endl;
+```
+ 
