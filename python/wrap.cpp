@@ -44,6 +44,14 @@ PYBIND11_MODULE(spline, m) {
         .def("BasisDrvY", (std::vector <double> (Bspline2d::*) (std::vector <double> &, std::vector <double> &, int, int) const) &Bspline2d::BasisDrvY)
         ;
 
+    py::class_<Bspline3d>(m, "Spline3D")
+        .def(py::init<double, double, int, double, double, int, double, double, int>())
+        .def(py::init<std::string &>())
+        .def("Eval", (std::vector <double> (Bspline3d::*)(std::vector <double> &, std::vector <double> &, std::vector <double> &) const) &Bspline3d::Eval)
+        .def("Eval", (double (Bspline3d::*)(double, double, double) const) &Bspline3d::Eval)
+        .def("GetJsonString", (std::string (Bspline3d::*)() const) &Bspline3d::GetJsonString)
+        ;
+
     py::class_<BSfit1D>(m, "Fit1D")
         .def(py::init<double, double, int>())
 //    	.def(py::init<Bspline1d*>())
@@ -116,5 +124,16 @@ PYBIND11_MODULE(spline, m) {
         .def("SetSlopeY", &ConstrainedFit2D::SetSlopeY)
         .def("ForceTopDown", &ConstrainedFit2D::ForceTopDown)
         .def("ForceFlatTopX", &ConstrainedFit2D::ForceFlatTopX)    
-        ;     
+        ; 
+
+    py::class_<BSfit3D>(m, "Fit3D")
+        .def(py::init<double, double, int, double, double, int, double, double, int>())
+        .def("AddData", (void (BSfit3D::*)(std::vector <double> &, std::vector <double> &, std::vector <double> &, std::vector <double> &)) &BSfit3D::AddData)
+        .def("SetBinning", &BSfit3D::SetBinning)
+        .def("SetBinningAuto", &BSfit3D::SetBinningAuto)
+    	.def("Fit", (bool (BSfit3D::*)(std::vector <double> &, std::vector <double> &, std::vector <double> &, std::vector <double> &)) &BSfit3D::Fit)
+        .def("BinnedFit", &BSfit3D::BinnedFit)
+        .def("MakeSpline", &BSfit3D::MakeSpline)
+        .def("FitAndMakeSpline", &BSfit3D::FitAndMakeSpline)
+        ;    
 }

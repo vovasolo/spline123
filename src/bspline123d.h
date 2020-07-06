@@ -275,6 +275,7 @@ class Bspline3d : public BsplineBasis3d
         Bspline3d(BsplineBasis3d &base);
         void Init();
         double Eval(double x, double y, double z) const;
+        std::vector <double> Eval (std::vector <double> &vx, std::vector <double> &vy, std::vector <double> &vz) const;
         double Eval_greedy(double x, double y, double z) const;
         double EvalDrvX(double x, double y, double z) const;
         double EvalDrvY(double x, double y, double z) const;

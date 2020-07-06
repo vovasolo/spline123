@@ -728,6 +728,16 @@ double Bspline3d::Eval(double x, double y, double z) const
     return xy.dot(B*PowerVec(zf));
 }
 
+std::vector <double> Bspline3d::Eval (std::vector <double> &vx, std::vector <double> &vy, std::vector <double> &vz) const
+{
+    int len = std::min({vx.size(), vy.size(), vz.size()});
+	std::vector <double> vf(len);
+	for (int i=0; i<len; i++)
+		vf[i] = Eval(vx[i], vy[i], vz[i]);
+		
+	return vf;
+}
+
 double Bspline3d::EvalDrvX(double x, double y, double z) const
 {
     int ix, iy, iz;
