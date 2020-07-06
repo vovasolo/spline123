@@ -1,35 +1,11 @@
 #include "profileHist.h"
 
-double ProfileHist::GetEntries()
+double ProfileHist::GetEntries() const
 {
     double sum = 0.;
     for (int i=0; i<data.size(); i++)
         sum += data[i].GetEntries();
     return sum;
-}
-
-double ProfileHist::GetBinEntries(int ix, int iy, int iz)
-{
-    if (ix>=0 && ix<xdim && iy>=0 && iy<ydim && iz>=0 && iz<zdim)
-        return data[ix+(iy+iz*ydim)*xdim].GetEntries(); 
-    else
-        return 0.;       
-}
-
-double ProfileHist::GetBinMean(int ix, int iy, int iz)
-{
-    if (ix>=0 && ix<xdim && iy>=0 && iy<ydim && iz>=0 && iz<zdim)
-        return data[ix+(iy+iz*ydim)*xdim].GetMean(); 
-    else
-        return 0.;       
-}
-
-double ProfileHist::GetBinSigma(int ix, int iy, int iz)
-{
-    if (ix>=0 && ix<xdim && iy>=0 && iy<ydim && iz>=0 && iz<zdim)
-        return data[ix+(iy+iz*ydim)*xdim].GetSigma(); 
-    else
-        return 0.;       
 }
 
 bool ProfileHist::Fill(double x, double t)

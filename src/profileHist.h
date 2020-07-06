@@ -30,56 +30,68 @@ public:
 // Base class, generic 3D implementation
 class ProfileHist
 {
-private:                // Andr ! make all getters const
+private:
     int ndim; // dimensionality: 1D, 2D or 3D
     int xdim, ydim, zdim;
     double xmin, ymin, zmin;
     double xmax, ymax, zmax;
     double dx, dy, dz;
     std::vector <PHCell> data;
+
 public:
     ProfileHist(int x_dim, double x_min, double x_max);
     ProfileHist(int x_dim, double x_min, double x_max, int y_dim, double y_min, double y_max);
     ProfileHist(int x_dim, double x_min, double x_max, int y_dim, double y_min, double y_max,
                 int z_dim, double z_min, double z_max);
-    int LocateX(double x) {return (int)((x-xmin)/dx*xdim);}
-    int LocateY(double y) {return ndim>=2 ? (int)((y-ymin)/dy*ydim) : 0;}
-    int LocateZ(double z) {return ndim>=3 ? (int)((z-zmin)/dz*zdim) : 0;}
+
+    int LocateX(double x) const {return (int)((x-xmin)/dx*xdim);}
+    int LocateY(double y) const {return ndim>=2 ? (int)((y-ymin)/dy*ydim) : 0;}
+    int LocateZ(double z) const {return ndim>=3 ? (int)((z-zmin)/dz*zdim) : 0;}
+
+    void Clear();
     bool Fill(double x, double t);
     bool Fill(double x, double y, double t);
     bool Fill(double x, double y, double z, double t);  
-//    bool FillW(double x, double t, double w);
-//    bool FillW(double x, double y, double t, double w);
-//    bool FillW(double x, double y, double z, double t, double w); 
-    double GetBinCenterX(int ix) {return xmin+(ix+0.5)*dx/xdim;}
-    double GetBinCenterY(int iy) {return ndim>=2 ? ymin+(iy+0.5)*dy/ydim : 0.;}
-    double GetBinCenterZ(int iz) {return ndim>=3 ? zmin+(iz+0.5)*dz/zdim : 0.;}
-    double GetBinEntries(int ix, int iy, int iz);
-    double GetBinMean(int ix, int iy, int iz); 
-    double GetBinSigma(int ix, int iy, int iz);
-    double GetEntries();
-    void Clear();
+
+    int GetNdim() const {return ndim;}
+    int GetBinsX() const {return xdim;}
+    int GetBinsY() const {return ydim;}
+    int GetBinsZ() const {return zdim;}
+    int GetBinsTotal() const {return data.size();}
+
+    double GetBinCenterX(int ix) const {return xmin+(ix+0.5)*dx/xdim;}
+    double GetBinCenterY(int iy) const {return ndim>=2 ? ymin+(iy+0.5)*dy/ydim : 0.;}
+    double GetBinCenterZ(int iz) const {return ndim>=3 ? zmin+(iz+0.5)*dz/zdim : 0.;}
+    double GetFlatBinEntries(int i) const {return data.at(i).GetEntries();}
+    double GetFlatBinMean(int i) const {return data.at(i).GetMean();}
+    double GetFlatBinSigma(int i) const {return data.at(i).GetSigma();}
+    int GetFlatIndex(int ix, int iy, int iz) const {return ix + (iy + iz*ydim)*xdim;}
+    double GetBinEntries(int ix, int iy, int iz) const {return GetFlatBinEntries(GetFlatIndex(ix, iy, iz));}
+    double GetBinMean(int ix, int iy, int iz) const {return GetFlatBinMean(GetFlatIndex(ix, iy, iz));} 
+    double GetBinSigma(int ix, int iy, int iz) const {return GetFlatBinSigma(GetFlatIndex(ix, iy, iz));}
+
+    double GetEntries() const;   
 };
 
 class ProfileHist1D : public ProfileHist
 {
-public:  // Andr ! make all getters const
+public:
     ProfileHist1D(int x_dim, double x_min, double x_max) : ProfileHist(x_dim, x_min, x_max) {}
     bool Fill(double x, double t) {return ProfileHist::Fill(x, t);} 
-    double GetBinEntries(int ix) {return ProfileHist::GetBinEntries(ix, 0, 0);}
-    double GetBinMean(int ix) {return ProfileHist::GetBinMean(ix, 0, 0);} 
-    double GetBinSigma(int ix) {return ProfileHist::GetBinSigma(ix, 0, 0);} 
+    double GetBinEntries(int ix) const {return ProfileHist::GetBinEntries(ix, 0, 0);}
+    double GetBinMean(int ix) const {return ProfileHist::GetBinMean(ix, 0, 0);} 
+    double GetBinSigma(int ix) const {return ProfileHist::GetBinSigma(ix, 0, 0);} 
 };
 
 class ProfileHist2D : public ProfileHist
 {
-public:  // Andr ! make all getters const
+public:
     ProfileHist2D(int x_dim, double x_min, double x_max, int y_dim, double y_min, double y_max) : 
                     ProfileHist(x_dim, x_min, x_max, y_dim, y_min, y_max) {}
     bool Fill(double x, double y, double t) {return ProfileHist::Fill(x, y, t);} 
-    double GetBinEntries(int ix, int iy) {return ProfileHist::GetBinEntries(ix, iy, 0);}
-    double GetBinMean(int ix, int iy) {return ProfileHist::GetBinMean(ix, iy, 0);} 
-    double GetBinSigma(int ix, int iy) {return ProfileHist::GetBinSigma(ix, iy, 0);} 
+    double GetBinEntries(int ix, int iy) const {return ProfileHist::GetBinEntries(ix, iy, 0);}
+    double GetBinMean(int ix, int iy) const {return ProfileHist::GetBinMean(ix, iy, 0);} 
+    double GetBinSigma(int ix, int iy) const {return ProfileHist::GetBinSigma(ix, iy, 0);} 
 };
 
 class ProfileHist3D : public ProfileHist

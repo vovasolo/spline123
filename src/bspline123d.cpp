@@ -49,9 +49,11 @@ BsplineBasis1d::BsplineBasis1d(double xmin, double xmax, int n_int)
     Init(xmin, xmax, n_int);
 }
 
-BsplineBasis1d::BsplineBasis1d(const BsplineBasis1d &obj) 
+BsplineBasis1d::BsplineBasis1d(const BsplineBasis1d &obj)
 {
     Init(obj.xl, obj.xr, obj.nint);
+    this->fValid = obj.fValid;
+    this->fReady = obj.fReady;
 }
 
 void BsplineBasis1d::Init(double xmin, double xmax, int n_int)

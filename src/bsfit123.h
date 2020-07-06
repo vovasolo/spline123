@@ -7,6 +7,7 @@
 
 #include "bspline123d.h"
 
+class ProfileHist;
 class ProfileHist1D;
 class ProfileHist2D;
 class ProfileHist3D;
@@ -58,6 +59,8 @@ public:
     BSfit() {;}
     virtual ~BSfit() {;} // Andr +
 
+    virtual BSfit* clone() const = 0;
+    virtual ProfileHist *GetHist() = 0;
     virtual bool SolveLinSystem();
     bool SolveSVD();
     bool SolveQR();
@@ -103,6 +106,7 @@ public:
     BSfit1D(double xmin, double xmax, int n_int);
     BSfit1D(Bspline1d *bs_);
     ~BSfit1D();
+    virtual BSfit1D* clone() const;
     void Init();
     void AddData(double const x, double const f);
     void AddData(int npts, double const *datax, double const *data);
@@ -122,6 +126,8 @@ public:
     Bspline1d *MakeSpline() const;
     Bspline1d *FitAndMakeSpline(std::vector <double> &datax, std::vector <double> &data);
 
+    ProfileHist *GetHist();
+
 protected:
     void MkLinSystem(int npts, double const *datax, double const *data, double const *dataw);
 private:
@@ -136,7 +142,9 @@ class ConstrainedFit1D : public BSfit1D
 {
 public:
     ConstrainedFit1D(double xmin, double xmax, int n_int);
+    ConstrainedFit1D(Bspline1d *bs_);
     virtual ~ConstrainedFit1D() {;}
+    virtual ConstrainedFit1D* clone() const;
     bool SolveLinSystem();
 
 // 1D constraints
@@ -164,6 +172,7 @@ public:
     BSfit2D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty);
     BSfit2D(Bspline2d *bs_);
     ~BSfit2D();
+    virtual BSfit2D* clone() const;
     void Init();
     void AddData(double const x, double const y, double const f);
     void AddData(int npts, double const *datax, double const *datay, double const *dataz);
@@ -182,6 +191,7 @@ public:
     Bspline2d *MakeSpline() const;
     Bspline2d *FitAndMakeSpline(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &data);
 
+    ProfileHist *GetHist();
 protected:
    void MkLinSystem(int npts, double const *datax, double const *datay, double const *data, double const *dataw);
 
@@ -199,6 +209,7 @@ class ConstrainedFit2D : public BSfit2D
 public:
     ConstrainedFit2D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty);
     virtual ~ConstrainedFit2D() {;}
+    virtual ConstrainedFit2D* clone() const;
     bool SolveLinSystem();
 // 2D constraints
     void SetMinimum(double min) {cstr->SetMinimum(min);}
@@ -225,6 +236,7 @@ public:
     BSfit3D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty, double zmin, double zmax, int n_intz);
     BSfit3D(Bspline3d *bs_);
     ~BSfit3D();
+    virtual BSfit3D* clone() const;
     void Init();
     void AddData(int npts, double const *x, double const *y, double const *z, double const *data);
     bool SetBinning(int binsx, int binsy, int binsz);
@@ -240,6 +252,8 @@ public:
     std::vector<double> GetCoef(int iz) const;
     Bspline3d *MakeSpline() const;
     Bspline3d *FitAndMakeSpline(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &dataz, std::vector <double> &data);
+
+    ProfileHist *GetHist();
 
 protected:
     int nbasx;
@@ -258,6 +272,7 @@ class ConstrainedFit3D : public BSfit3D
 public:
     ConstrainedFit3D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty, double zmin, double zmax, int n_intz);
     virtual ~ConstrainedFit3D() {;}
+    virtual ConstrainedFit3D* clone() const;
     bool SolveLinSystem();
 
 // 3D constraints

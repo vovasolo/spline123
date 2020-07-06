@@ -279,7 +279,7 @@ bool BSfit::SolveSVD()
     JacobiSVD <MatrixXd> svd(A, Eigen::ComputeThinU | Eigen::ComputeThinV);
     VectorXd singval = svd.singularValues();
 //std::cout << "Singular values: " << svd.singularValues();
-    double svd_condition = singval(0)/singval(singval.size()-1);
+    svd_condition = singval(0)/singval(singval.size()-1);
     x = svd.solve(y);
 
     VectorXd r = A*x - y;
@@ -389,6 +389,14 @@ BSfit1D::~BSfit1D()
     delete bs;
 }
 
+BSfit1D* BSfit1D::clone() const 
+{ 
+    BSfit1D *copy = new BSfit1D(*this); 
+    copy->h1 = h1 ? new ProfileHist1D(*h1) : nullptr;
+    copy->bs = bs ? new BsplineBasis1d(*bs) : nullptr;
+    return copy;
+}
+
 void BSfit1D::Init()
 {
     nbas = bs->GetNbas();
@@ -478,7 +486,8 @@ bool BSfit1D::BinnedFit()
 bool BSfit1D::WeightedFit(int npts, double const *datax, double const *data, double const *dataw)
 {
     MkLinSystem(npts, datax, data, dataw);
-    return SolveLinSystem();
+    status = SolveLinSystem();
+    return status;
 }
 
 std::vector<double> BSfit1D::GetCoef() const
@@ -503,9 +512,28 @@ Bspline1d *BSfit1D::FitAndMakeSpline(std::vector <double> &datax, std::vector <d
     return status ? MakeSpline() : nullptr;
 }
 
+ProfileHist *BSfit1D::GetHist()
+{
+    return h1; //dynamic_cast <ProfileHist*>(h1);
+}
+
 ConstrainedFit1D::ConstrainedFit1D(double xmin, double xmax, int n_int) : BSfit1D(xmin, xmax, n_int)
 {
     cstr = new Constraints(bs->GetNbas());
+}
+
+ConstrainedFit1D::ConstrainedFit1D(Bspline1d *bs_) : BSfit1D(bs_)
+{
+    cstr = new Constraints(bs->GetNbas());
+}
+
+ConstrainedFit1D* ConstrainedFit1D::clone() const 
+{ 
+    ConstrainedFit1D *copy = new ConstrainedFit1D(*this); 
+    copy->h1 = h1 ? new ProfileHist1D(*h1) : nullptr;
+    copy->bs = bs ? new BsplineBasis1d(*bs) : nullptr;
+    copy->cstr = cstr ? new Constraints(*cstr) : nullptr;
+    return copy;
 }
 
 bool ConstrainedFit1D::SolveLinSystem()
@@ -531,6 +559,14 @@ BSfit2D::~BSfit2D()
 {
     delete h2;
     delete bs;
+}
+
+BSfit2D* BSfit2D::clone() const 
+{ 
+    BSfit2D *copy = new BSfit2D(*this); 
+    copy->h2 = h2 ? new ProfileHist2D(*h2) : nullptr;
+    copy->bs = bs ? new BsplineBasis2d(*bs) : nullptr;
+    return copy;
 }
 
 void BSfit2D::Init()
@@ -691,10 +727,24 @@ Bspline2d *BSfit2D::FitAndMakeSpline(std::vector <double> &datax, std::vector <d
     return status ? MakeSpline() : nullptr;
 }
 
+ProfileHist *BSfit2D::GetHist()
+{
+    return h2; // dynamic_cast <ProfileHist*>(h2);
+}
+
 ConstrainedFit2D::ConstrainedFit2D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty) : 
         BSfit2D(xmin, xmax, n_intx, ymin, ymax, n_inty)
 {
     cstr = new Constraints(bs->GetNbas());
+}
+
+ConstrainedFit2D* ConstrainedFit2D::clone() const 
+{ 
+    ConstrainedFit2D *copy = new ConstrainedFit2D(*this); 
+    copy->h2 = h2 ? new ProfileHist2D(*h2) : nullptr;
+    copy->bs = bs ? new BsplineBasis2d(*bs) : nullptr;
+    copy->cstr = cstr ? new Constraints(*cstr) : nullptr;
+    return copy;
 }
 
 bool ConstrainedFit2D::SolveLinSystem()
@@ -721,6 +771,14 @@ BSfit3D::~BSfit3D()
 {
     delete h3;
     delete bs;
+}
+
+BSfit3D* BSfit3D::clone() const 
+{ 
+    BSfit3D *copy = new BSfit3D(*this); 
+    copy->h3 = h3 ? new ProfileHist3D(*h3) : nullptr;
+    copy->bs = bs ? new BsplineBasis3d(*bs) : nullptr;
+    return copy;
 }
 
 void BSfit3D::Init()
@@ -902,11 +960,24 @@ Bspline3d *BSfit3D::FitAndMakeSpline(std::vector <double> &datax, std::vector <d
     return status ? MakeSpline() : nullptr;
 }
 
+ProfileHist *BSfit3D::GetHist()
+{
+    return h3; // dynamic_cast <ProfileHist*>(h3);
+}
 
 ConstrainedFit3D::ConstrainedFit3D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty, double zmin, double zmax, int n_intz) : 
         BSfit3D(xmin, xmax, n_intx, ymin, ymax, n_inty, zmin, zmax, n_intz)
 {
     cstr = new Constraints(bs->GetNbas());
+}
+
+ConstrainedFit3D* ConstrainedFit3D::clone() const 
+{ 
+    ConstrainedFit3D *copy = new ConstrainedFit3D(*this); 
+    copy->h3 = h3 ? new ProfileHist3D(*h3) : nullptr;
+    copy->bs = bs ? new BsplineBasis3d(*bs) : nullptr;
+    copy->cstr = cstr ? new Constraints(*cstr) : nullptr;
+    return copy;
 }
 
 bool ConstrainedFit3D::SolveLinSystem()
