@@ -63,6 +63,12 @@ PYBIND11_MODULE(spline, m) {
         .def("GetCoef", &BSfit1D::GetCoef)
         .def("MakeSpline", &BSfit1D::MakeSpline)
         .def("FitAndMakeSpline", &BSfit1D::FitAndMakeSpline)
+        .def("GetMeans", &BSfit1D::GetMeans)
+        .def("GetSigmas", &BSfit1D::GetSigmas)
+        .def("GetWeights", &BSfit1D::GetWeights)
+        .def("GetXCenters", &BSfit1D::GetXCenters)
+        .def("SetMinWeight", &BSfit1D::SetMinWeight)
+        .def("SetMissingFactor", &BSfit1D::SetMissingFactor)
         ;      
 
     py::class_<ConstrainedFit1D>(m, "ConstrainedFit1D")
@@ -102,6 +108,13 @@ PYBIND11_MODULE(spline, m) {
         .def("GetCoef", &BSfit2D::GetCoef)
         .def("MakeSpline", &BSfit2D::MakeSpline)
         .def("FitAndMakeSpline", &BSfit2D::FitAndMakeSpline)
+        .def("GetMeans", &BSfit2D::GetMeans)
+        .def("GetSigmas", &BSfit2D::GetSigmas)
+        .def("GetWeights", &BSfit2D::GetWeights)
+        .def("GetXCenters", &BSfit2D::GetXCenters)
+        .def("GetYCenters", &BSfit2D::GetYCenters)
+        .def("SetMinWeight", &BSfit2D::SetMinWeight)
+        .def("SetMissingFactor", &BSfit2D::SetMissingFactor)
         ;
 
     py::class_<ConstrainedFit2D>(m, "ConstrainedFit2D")
@@ -135,5 +148,13 @@ PYBIND11_MODULE(spline, m) {
         .def("BinnedFit", &BSfit3D::BinnedFit)
         .def("MakeSpline", &BSfit3D::MakeSpline)
         .def("FitAndMakeSpline", &BSfit3D::FitAndMakeSpline)
+        .def("GetMeans", &BSfit3D::GetMeans)
+        .def("GetSigmas", &BSfit3D::GetSigmas)
+        .def("GetWeights", &BSfit3D::GetWeights)
+        .def("GetXCenters", &BSfit3D::GetXCenters)
+        .def("GetYCenters", &BSfit3D::GetYCenters)
+        .def("GetZCenters", &BSfit3D::GetZCenters)
+        .def("SetMinWeight", &BSfit3D::SetMinWeight)
+        .def("SetMissingFactor", &BSfit3D::SetMissingFactor)
         ;    
 }

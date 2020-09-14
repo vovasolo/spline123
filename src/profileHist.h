@@ -70,7 +70,18 @@ public:
     double GetBinMean(int ix, int iy, int iz) const {return GetFlatBinMean(GetFlatIndex(ix, iy, iz));} 
     double GetBinSigma(int ix, int iy, int iz) const {return GetFlatBinSigma(GetFlatIndex(ix, iy, iz));}
 
-    double GetEntries() const;   
+    double GetEntriesTotal() const;
+
+    std::vector <double>  GetMeans();
+    std::vector <double>  GetXCenters();
+    std::vector <double>  GetYCenters();
+    std::vector <double>  GetZCenters();
+    std::vector <double>  GetSigmas();
+    std::vector <double>  GetWeights();
+protected:
+    int Getix(int i) {return i % xdim;}
+    int Getiy(int i) {return (i/xdim) % ydim;}  
+    int Getiz(int i) {return i/(xdim*ydim);}
 };
 
 class ProfileHist1D : public ProfileHist

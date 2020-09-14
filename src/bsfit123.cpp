@@ -435,6 +435,26 @@ void BSfit1D::AddData(int npts, double const *datax, double const *datay)
         h1->Fill(datax[i], datay[i]);
 }
 
+std::vector <double> BSfit1D::GetMeans()
+{
+    return h1->GetMeans();
+}
+
+std::vector <double> BSfit1D::GetSigmas()
+{
+    return h1->GetSigmas();
+}
+
+std::vector <double> BSfit1D::GetWeights()
+{
+    return h1->GetWeights();
+}
+
+std::vector <double> BSfit1D::GetXCenters()
+{
+    return h1->GetXCenters();
+}
+
 void BSfit1D::MkLinSystem(int npts, double const *datax, double const *data, double const *dataw)
 {
 // linear least squares: matrix eqation Ax=y
@@ -467,7 +487,7 @@ void BSfit1D::MkLinSystem(int npts, double const *datax, double const *data, dou
 // this is the default fitting routine to be performed on the binned data
 bool BSfit1D::BinnedFit()
 {
-    if (!h1 || h1->GetEntries() == 0. ) {
+    if (!h1 || h1->GetEntriesTotal() == 0. ) {
         error_msg = "BSfit1D: No binned data to fit. Call AddData(npts, datax, datay) first";
         return false;
     }
@@ -617,6 +637,31 @@ void BSfit2D::AddData(int npts, double const *datax, double const *datay, const 
         h2->Fill(datax[i], datay[i], dataz[i]);
 }
 
+std::vector <double> BSfit2D::GetMeans()
+{
+    return h2->GetMeans();
+}
+
+std::vector <double> BSfit2D::GetSigmas()
+{
+    return h2->GetSigmas();
+}
+
+std::vector <double> BSfit2D::GetWeights()
+{
+    return h2->GetWeights();
+}
+
+std::vector <double> BSfit2D::GetXCenters()
+{
+    return h2->GetXCenters();
+}
+
+std::vector <double> BSfit2D::GetYCenters()
+{
+    return h2->GetYCenters();
+}
+
 void BSfit2D::MkLinSystem(int npts, double const *datax, double const *datay, double const *data, double const *dataw)
 {
 // for the case of weighted data with missing points,
@@ -676,7 +721,7 @@ void BSfit2D::MkLinSystem(int npts, double const *datax, double const *datay, do
 // this is the default fitting routine to be performed on the binned data
 bool BSfit2D::BinnedFit()
 {
-    if (!h2 || h2->GetEntries() == 0. ) {
+    if (!h2 || h2->GetEntriesTotal() == 0. ) {
         error_msg = "BSfit2D: No data to fit. Call AddData(npts, datax, datay, dataz) first\n";
         return false;
     }
@@ -833,6 +878,41 @@ void BSfit3D::AddData(int npts, double const *x, double const *y, const double *
         h3->Fill(x[i], y[i], z[i], data[i]);
 }
 
+void BSfit3D::AddData(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &dataz, std::vector <double> &data)
+{
+    AddData(std::min({datax.size(), datay.size(), dataz.size(), data.size()}), &datax[0], &datay[0], &dataz[0], &data[0]);
+}
+
+std::vector <double> BSfit3D::GetMeans()
+{
+    return h3->GetMeans();
+}
+
+std::vector <double> BSfit3D::GetSigmas()
+{
+    return h3->GetSigmas();
+}
+
+std::vector <double> BSfit3D::GetWeights()
+{
+    return h3->GetWeights();
+}
+
+std::vector <double> BSfit3D::GetXCenters()
+{
+    return h3->GetXCenters();
+}
+
+std::vector <double> BSfit3D::GetYCenters()
+{
+    return h3->GetYCenters();
+}
+
+std::vector <double> BSfit3D::GetZCenters()
+{
+    return h3->GetZCenters();
+}
+
 void BSfit3D::MkLinSystem(int npts, double const *datax, double const *datay, double const *dataz, double const *data, double const *dataw)
 {
 // for the case of weighted data with missing points,
@@ -905,7 +985,7 @@ void BSfit3D::MkLinSystem(int npts, double const *datax, double const *datay, do
 // this is the default fitting routine to be performed on the binned data
 bool BSfit3D::BinnedFit()
 {
-    if (!h3 || h3->GetEntries() == 0. ) {
+    if (!h3 || h3->GetEntriesTotal() == 0. ) {
         error_msg = "BSfit3D: No data to fit. Call AddData(npts, datax, datay, dataz) first\n";
         return false;
     }

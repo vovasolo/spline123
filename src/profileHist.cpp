@@ -1,6 +1,6 @@
 #include "profileHist.h"
 
-double ProfileHist::GetEntries() const
+double ProfileHist::GetEntriesTotal() const
 {
     double sum = 0.;
     for (int i=0; i<data.size(); i++)
@@ -33,7 +33,7 @@ bool ProfileHist::Fill(double x, double y, double z, double t)
 {
     int ix = LocateX(x);
     int iy = LocateY(y);
-    int iz = LocateY(z);
+    int iz = LocateZ(z);
     if (ix>=0 && ix<xdim && iy>=0 && iy<ydim && iz>=0 && iz<zdim)
         data[ix+(iy+iz*ydim)*xdim].Add(t);
     return true;
@@ -72,5 +72,62 @@ ProfileHist::ProfileHist(int x_dim, double x_min, double x_max, int y_dim, doubl
     dy = ymax - ymin;
     dz = zmax - zmin;
     ndim = 3;
+}
+
+std::vector <double> ProfileHist::GetMeans()
+{
+    int len = GetBinsTotal();
+    std::vector <double> tmp;
+    tmp.reserve(len);
+    for (int i=0; i<len; i++)
+        tmp.push_back(GetFlatBinMean(i));
+    return tmp;    
+}
+std::vector <double> ProfileHist::GetXCenters()
+{
+    int len = GetBinsTotal();
+    std::vector <double> tmp;
+    tmp.reserve(len);
+    for (int i=0; i<len; i++)
+        tmp.push_back(GetBinCenterX(Getix(i)));
+    return tmp;  
+}
+std::vector <double> ProfileHist::GetYCenters()
+{
+    int len = GetBinsTotal();
+    std::vector <double> tmp;
+    tmp.reserve(len);
+    for (int i=0; i<len; i++)
+        tmp.push_back(GetBinCenterY(Getiy(i)));
+    return tmp;  
+}
+std::vector <double> ProfileHist::GetZCenters()
+{
+    int len = GetBinsTotal();
+    std::vector <double> tmp;
+    tmp.reserve(len);
+    for (int i=0; i<len; i++)
+        tmp.push_back(GetBinCenterZ(Getiz(i)));
+    return tmp;  
+}
+
+std::vector <double>  ProfileHist::GetSigmas()
+{
+    int len = GetBinsTotal();
+    std::vector <double> tmp;
+    tmp.reserve(len);
+    for (int i=0; i<len; i++)
+        tmp.push_back(GetFlatBinSigma(i));
+    return tmp;
+}
+
+std::vector <double>  ProfileHist::GetWeights()
+{
+    int len = GetBinsTotal();
+    std::vector <double> tmp;
+    tmp.reserve(len);
+    for (int i=0; i<len; i++)
+        tmp.push_back(GetFlatBinEntries(i));
+    return tmp;
 }
 

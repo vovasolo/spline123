@@ -68,6 +68,8 @@ public:
     bool SolveQuadProg(Eigen::MatrixXd &CI, Eigen::VectorXd &ci0, Eigen::MatrixXd &CE, Eigen::VectorXd &ce0);
     void SetMethod(Method m) {method = m;}
     Method SelectMethod();
+    void SetMinWeight(double val) {min_weight = val;}
+    void SetMissingFactor(double val) {missing_factor = val;}
 
 //    void DumpQuadProg();
     double GetResidual() const {return residual;}    // Andr const
@@ -83,6 +85,9 @@ protected:
     Eigen::MatrixXd A;
     Eigen::VectorXd y;
     Eigen::VectorXd x;
+// how to treat low stats
+    double min_weight = 1;  // minimal accepted bin count
+    double missing_factor = 1; // multiplication factor for 2nd derivative
 // feedback from linear solver
     bool status;
     double residual;
@@ -114,6 +119,10 @@ public:
             {AddData(std::min(datax.size(), data.size()), &datax[0], &data[0]); }
     bool SetBinning(int bins);
     void SetBinningAuto();
+    std::vector <double> GetMeans();
+    std::vector <double> GetSigmas();
+    std::vector <double> GetWeights();
+    std::vector <double>  GetXCenters();
 
     bool Fit(std::vector <double> &datax, std::vector <double> &data)
             {return Fit(std::min(datax.size(), data.size()), &datax[0], &data[0]);}
@@ -180,6 +189,11 @@ public:
             {AddData(std::min({datax.size(), datay.size(), data.size()}), &datax[0], &datay[0], &data[0]);}
     bool SetBinning(int binsx, int binsy);
     void SetBinningAuto();
+    std::vector <double> GetMeans();
+    std::vector <double> GetSigmas();
+    std::vector <double> GetWeights();
+    std::vector <double>  GetXCenters();
+    std::vector <double>  GetYCenters();
 
     bool Fit(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &data);
     bool Fit(int npts, double const *datax, double const *datay, double const *data)
@@ -239,9 +253,15 @@ public:
     virtual BSfit3D* clone() const;
     void Init();
     void AddData(int npts, double const *x, double const *y, double const *z, double const *data);
+    void AddData(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &dataz, std::vector <double> &data);
     bool SetBinning(int binsx, int binsy, int binsz);
     void SetBinningAuto();
-    void MkLinSystem(int npts, double const *datax, double const *datay, double const *dataz, double const *data, double const *dataw);
+    std::vector <double> GetMeans();
+    std::vector <double> GetSigmas();
+    std::vector <double> GetWeights();
+    std::vector <double>  GetXCenters();
+    std::vector <double>  GetYCenters();
+    std::vector <double>  GetZCenters();
 
     bool Fit(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &dataz, std::vector <double> &data);
     bool Fit(int npts, double const *datax, double const *datay, double const *dataz, double const *data)
@@ -256,6 +276,9 @@ public:
     ProfileHist *GetHist();
 
 protected:
+    void MkLinSystem(int npts, double const *datax, double const *datay, double const *dataz, double const *data, double const *dataw);
+
+private:    
     int nbasx;
     int nbasy;
     int nbasz;
