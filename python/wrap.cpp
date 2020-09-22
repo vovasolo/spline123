@@ -63,6 +63,7 @@ PYBIND11_MODULE(spline, m) {
         .def("GetCoef", &BSfit1D::GetCoef)
         .def("MakeSpline", &BSfit1D::MakeSpline)
         .def("FitAndMakeSpline", &BSfit1D::FitAndMakeSpline)
+    // profile histogram access
         .def("GetMeans", &BSfit1D::GetMeans)
         .def("GetSigmas", &BSfit1D::GetSigmas)
         .def("GetWeights", &BSfit1D::GetWeights)
@@ -94,7 +95,14 @@ PYBIND11_MODULE(spline, m) {
         .def("FixLeft", &ConstrainedFit1D::FixLeft)
         .def("FixDrvLeft", &ConstrainedFit1D::FixDrvLeft)
         .def("FixRight", &ConstrainedFit1D::FixRight)
-        .def("FixDrvRight", &ConstrainedFit1D::FixDrvRight)       
+        .def("FixDrvRight", &ConstrainedFit1D::FixDrvRight)
+    // profile histogram access
+        .def("GetMeans", &ConstrainedFit1D::GetMeans)
+        .def("GetSigmas", &ConstrainedFit1D::GetSigmas)
+        .def("GetWeights", &ConstrainedFit1D::GetWeights)
+        .def("GetXCenters", &ConstrainedFit1D::GetXCenters)
+        .def("SetMinWeight", &ConstrainedFit1D::SetMinWeight)
+        .def("SetMissingFactor", &ConstrainedFit1D::SetMissingFactor)      
         ;
 
     py::class_<BSfit2D>(m, "Fit2D")
@@ -108,6 +116,7 @@ PYBIND11_MODULE(spline, m) {
         .def("GetCoef", &BSfit2D::GetCoef)
         .def("MakeSpline", &BSfit2D::MakeSpline)
         .def("FitAndMakeSpline", &BSfit2D::FitAndMakeSpline)
+    // profile histogram access    
         .def("GetMeans", &BSfit2D::GetMeans)
         .def("GetSigmas", &BSfit2D::GetSigmas)
         .def("GetWeights", &BSfit2D::GetWeights)
@@ -136,8 +145,16 @@ PYBIND11_MODULE(spline, m) {
         .def("ForceNonIncreasingX", &ConstrainedFit2D::ForceNonIncreasingX)
         .def("SetSlopeY", &ConstrainedFit2D::SetSlopeY)
         .def("ForceTopDown", &ConstrainedFit2D::ForceTopDown)
-        .def("ForceFlatTopX", &ConstrainedFit2D::ForceFlatTopX)    
-        ; 
+        .def("ForceFlatTopX", &ConstrainedFit2D::ForceFlatTopX)
+    // profile histogram access    
+        .def("GetMeans", &ConstrainedFit2D::GetMeans)
+        .def("GetSigmas", &ConstrainedFit2D::GetSigmas)
+        .def("GetWeights", &ConstrainedFit2D::GetWeights)
+        .def("GetXCenters", &ConstrainedFit2D::GetXCenters)
+        .def("GetYCenters", &ConstrainedFit2D::GetYCenters)
+        .def("SetMinWeight", &ConstrainedFit2D::SetMinWeight)
+        .def("SetMissingFactor", &ConstrainedFit2D::SetMissingFactor)        
+        ;
 
     py::class_<BSfit3D>(m, "Fit3D")
         .def(py::init<double, double, int, double, double, int, double, double, int>())
@@ -148,6 +165,7 @@ PYBIND11_MODULE(spline, m) {
         .def("BinnedFit", &BSfit3D::BinnedFit)
         .def("MakeSpline", &BSfit3D::MakeSpline)
         .def("FitAndMakeSpline", &BSfit3D::FitAndMakeSpline)
+    // profile histogram access    
         .def("GetMeans", &BSfit3D::GetMeans)
         .def("GetSigmas", &BSfit3D::GetSigmas)
         .def("GetWeights", &BSfit3D::GetWeights)
@@ -156,5 +174,29 @@ PYBIND11_MODULE(spline, m) {
         .def("GetZCenters", &BSfit3D::GetZCenters)
         .def("SetMinWeight", &BSfit3D::SetMinWeight)
         .def("SetMissingFactor", &BSfit3D::SetMissingFactor)
-        ;    
+        ;
+
+    py::class_<ConstrainedFit3D>(m, "Fit3D")
+        .def(py::init<double, double, int, double, double, int, double, double, int>())
+        .def("AddData", (void (ConstrainedFit3D::*)(std::vector <double> &, std::vector <double> &, std::vector <double> &, std::vector <double> &)) &ConstrainedFit3D::AddData)
+        .def("SetBinning", &ConstrainedFit3D::SetBinning)
+        .def("SetBinningAuto", &ConstrainedFit3D::SetBinningAuto)
+    	.def("Fit", (bool (ConstrainedFit3D::*)(std::vector <double> &, std::vector <double> &, std::vector <double> &, std::vector <double> &)) &ConstrainedFit3D::Fit)
+        .def("BinnedFit", &ConstrainedFit3D::BinnedFit)
+        .def("MakeSpline", &ConstrainedFit3D::MakeSpline)
+        .def("FitAndMakeSpline", &ConstrainedFit3D::FitAndMakeSpline)
+    // constraints
+        .def("SetMinimum", &ConstrainedFit3D::SetMinimum)  
+        .def("SetMaximum", &ConstrainedFit3D::SetMaximum)    
+        .def("ForceNonNegative", &ConstrainedFit3D::ForceNonNegative)
+    // profile histogram access        
+        .def("GetMeans", &ConstrainedFit3D::GetMeans)
+        .def("GetSigmas", &ConstrainedFit3D::GetSigmas)
+        .def("GetWeights", &ConstrainedFit3D::GetWeights)
+        .def("GetXCenters", &ConstrainedFit3D::GetXCenters)
+        .def("GetYCenters", &ConstrainedFit3D::GetYCenters)
+        .def("GetZCenters", &ConstrainedFit3D::GetZCenters)
+        .def("SetMinWeight", &ConstrainedFit3D::SetMinWeight)
+        .def("SetMissingFactor", &ConstrainedFit3D::SetMissingFactor)
+        ;          
 }
