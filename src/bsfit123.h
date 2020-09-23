@@ -222,6 +222,7 @@ class ConstrainedFit2D : public BSfit2D
 {
 public:
     ConstrainedFit2D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty);
+    ConstrainedFit2D(Bspline2d *bs_);
     virtual ~ConstrainedFit2D() {;}
     virtual ConstrainedFit2D* clone() const;
     bool SolveLinSystem();
@@ -252,6 +253,7 @@ public:
     ~BSfit3D();
     virtual BSfit3D* clone() const;
     void Init();
+    void AddData(double const x, double const y, double const z, double const f);
     void AddData(int npts, double const *x, double const *y, double const *z, double const *data);
     void AddData(std::vector <double> &datax, std::vector <double> &datay, std::vector <double> &dataz, std::vector <double> &data);
     bool SetBinning(int binsx, int binsy, int binsz);
@@ -294,6 +296,7 @@ class ConstrainedFit3D : public BSfit3D
 {
 public:
     ConstrainedFit3D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty, double zmin, double zmax, int n_intz);
+    ConstrainedFit3D(Bspline3d *bs_);
     virtual ~ConstrainedFit3D() {;}
     virtual ConstrainedFit3D* clone() const;
     bool SolveLinSystem();

@@ -176,7 +176,7 @@ PYBIND11_MODULE(spline, m) {
         .def("SetMissingFactor", &BSfit3D::SetMissingFactor)
         ;
 
-    py::class_<ConstrainedFit3D>(m, "Fit3D")
+    py::class_<ConstrainedFit3D>(m, "ConstrainedFit3D")
         .def(py::init<double, double, int, double, double, int, double, double, int>())
         .def("AddData", (void (ConstrainedFit3D::*)(std::vector <double> &, std::vector <double> &, std::vector <double> &, std::vector <double> &)) &ConstrainedFit3D::AddData)
         .def("SetBinning", &ConstrainedFit3D::SetBinning)

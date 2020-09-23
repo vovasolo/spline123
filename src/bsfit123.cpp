@@ -783,6 +783,11 @@ ConstrainedFit2D::ConstrainedFit2D(double xmin, double xmax, int n_intx, double 
     cstr = new Constraints(bs->GetNbas());
 }
 
+ConstrainedFit2D::ConstrainedFit2D(Bspline2d *bs_) : BSfit2D(bs_)
+{
+    cstr = new Constraints(bs->GetNbas());
+}
+
 ConstrainedFit2D* ConstrainedFit2D::clone() const 
 { 
     ConstrainedFit2D *copy = new ConstrainedFit2D(*this); 
@@ -867,6 +872,11 @@ void BSfit3D::SetBinningAuto()
     // we set it (somewhat arbitrarily) to 2 times number of intervals in each direction
     // this gives 8 bins per elementary box (safe down to 3x3x3 3D splines)
     SetBinning(bs->GetNintX()*2, bs->GetNintY()*2, bs->GetNintZ()*2);
+}
+
+void BSfit3D::AddData(double const x, double const y, double const z, double const f)
+{
+    h3->Fill(x, y, z, f);
 }
 
 void BSfit3D::AddData(int npts, double const *x, double const *y, const double *z, const double *data)
@@ -1047,6 +1057,11 @@ ProfileHist *BSfit3D::GetHist()
 
 ConstrainedFit3D::ConstrainedFit3D(double xmin, double xmax, int n_intx, double ymin, double ymax, int n_inty, double zmin, double zmax, int n_intz) : 
         BSfit3D(xmin, xmax, n_intx, ymin, ymax, n_inty, zmin, zmax, n_intz)
+{
+    cstr = new Constraints(bs->GetNbas());
+}
+
+ConstrainedFit3D::ConstrainedFit3D(Bspline3d *bs_) : BSfit3D(bs_)
 {
     cstr = new Constraints(bs->GetNbas());
 }
